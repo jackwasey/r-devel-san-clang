@@ -33,13 +33,13 @@ RUN cd /tmp \
 
 # perhaps prefer a branch here, not always head. Original is actually SVN.
 RUN cd /tmp
-RUN svn co https://llvm.org/svn/llvm-project/llvm/tags/RELEASE_370/final llvm
-RUN svn co https://llvm.org/svn/llvm-project/cfe/tags/RELEASE_370/final clang
-RUN svn co https://llvm.org/svn/llvm-project/clang-tools-extra/tags/RELEASE_370/final clang-tools-extra
-RUN svn co https://llvm.org/svn/llvm-project/compiler-rt/tags/RELEASE_370/final compiler-rt
-RUN svn co https://llvm.org/svn/llvm-project/libcxx/tags/RELEASE_370/final libcxx
-RUN svn co https://llvm.org/svn/llvm-project/libcxxabi/tags/RELEASE_370/final libcxxabi
-RUN svn co http://llvm.org/svn/llvm-project/openmp/tags/RELEASE_370/final openmp
+RUN svn co https://llvm.org/svn/llvm-project/llvm/trunk llvm
+RUN svn co https://llvm.org/svn/llvm-project/cfe/trunk clang
+RUN svn co https://llvm.org/svn/llvm-project/clang-tools-extra/trunk clang-tools-extra
+RUN svn co https://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt
+RUN svn co https://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+RUN svn co https://llvm.org/svn/llvm-project/libcxxabi/trunk libcxxabi
+RUN svn co http://llvm.org/svn/llvm-project/openmp/trunk openmp
 
 RUN mv clang llvm/tools
 RUN mv compiler-rt llvm/projects
@@ -97,8 +97,8 @@ RUN echo 'options("repos"="https://cran.rstudio.com")' >> /usr/local/lib/R/etc/R
 ENV ASAN_OPTIONS 'detect_leaks=0:detect_odr_violation=0'
 
 ## Check out littler
-RUN cd /tmp \
-	&& git clone https://github.com/eddelbuettel/littler.git
+# RUN cd /tmp \
+# 	&& git clone https://github.com/eddelbuettel/littler.git
 
 # R must have been built as a shared library so littler can be built and link to it:
 #RUN cd /tmp/littler \
@@ -109,5 +109,7 @@ RUN cd /tmp \
 #	&& cp -vax examples/*.r /usr/local/bin 
 
 # default cmd installs stressful packages
-# RUN Rscript -e "install.packages(c('stringi', 'Rcpp', 'devtools')); library(devtools)"
-# install_github('jackwasey/icd9')"
+# RUN Rscript -e "install.packages(c('stringi', 'Rcpp', 'devtools', 'testthat', 'checkmate'))"
+# RUN Rscript -e "library(devtools); install_github('jackwasey/icd9', branch = 'issue75')"
+# RUN cd /tmp && git clone https://github.com/jackwasey/icd9.git
+# CMD Rscript -e "library(devtools); library(testthat); test_file('/tmp/icd9/tests/testthat/test-openmp.R')"
